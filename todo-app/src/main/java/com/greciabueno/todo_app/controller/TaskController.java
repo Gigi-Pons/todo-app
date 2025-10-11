@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -30,6 +32,36 @@ public class TaskController {
         return ResponseEntity.created(uri).body(saved);
     }
 
-//    @PatchMapping("/{id}/completed")
-//    public Res
+    @PatchMapping("/{id}/completed")
+    public ResponseEntity<Task> markComplete(
+            @PathVariable Long id) {
+
+        //catching the exception and sending a 404 not found error
+        try {
+            Task updated = service.markCompleted(id);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+
+
+        //******************************************************************
+                //In case we wanted to un-complete the already completed task
+        //        Boolean completed = body.get("completed");
+        //        if(completed == null) {
+        //            return ResponseEntity.badRequest().build();
+        //        }
+        //
+        //        try {
+        //            Task updated = service.markCompleted(id, completed);
+        //            return ResponseEntity.ok(updated);
+        //        } catch (RuntimeException e) {
+        //            return ResponseEntity.notFound().build();
+        //        }
+        //***************************************************************************
+
+
+    }
 }
