@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,9 +28,6 @@ public class TaskService {
                     return repo.save(task);
                 })
                 .orElseThrow(() -> new RuntimeException("Task not found"));
-    }
-
-
 
 
         //***************************************************************************
@@ -49,8 +47,21 @@ public class TaskService {
         //        task.setCompleted(complete);
         //        return repo.save(task);
         // }
-         //***************************************************************************
+        //***************************************************************************
+    }
 
+    public boolean delete(Long id) {
+        //return false if the id doesn't exist and true if it exists (was successful)
+        if(repo.existsById(id)) {
+            repo.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public List<Task> getAllTasks() {
+        return repo.findAll();
+    }
 
 }

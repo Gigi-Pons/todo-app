@@ -2,19 +2,28 @@ package com.greciabueno.todo_app.controller;
 
 import com.greciabueno.todo_app.model.Task;
 import com.greciabueno.todo_app.service.TaskService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
     private TaskService service;
+
+    @GetMapping("/getAllTasks")
+    public ResponseEntity<List<Task>> getAll() {
+        List<Task> tasks = service.getAllTasks();
+        return ResponseEntity.ok(tasks);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Task> create(
@@ -61,7 +70,22 @@ public class TaskController {
         //            return ResponseEntity.notFound().build();
         //        }
         //***************************************************************************
-
-
     }
+
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id
+    ) {
+        //call the service layer
+        boolean itExists = service.delete(id);
+
+        //return the response entity according to the service return
+        if(itExists) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
